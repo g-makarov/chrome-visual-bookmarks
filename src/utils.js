@@ -14,3 +14,13 @@ export const createBookmark = (query) => {
 export const searchBookmarks = (query = {}) => {
   return new Promise(resolve => chrome.bookmarks.search(query, resolve));
 };
+
+export const getTree = () => {
+  return new Promise(resolve => chrome.bookmarks.getTree(res => resolve(res[0]['children'])));
+};
+
+export const getSubTree = (id) => {
+  return new Promise(resolve => chrome.bookmarks.getSubTree(id, resolve));
+};
+
+export const isFolder = obj => Boolean(obj.children);
