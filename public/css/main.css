@@ -1,0 +1,17 @@
+@import './reset.css';
+
+html, body {
+  box-sizing: border-box;
+  font-family: Ubuntu, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  background: #fff;
+  color: hsl(0, 0%, 17%);
+  line-height: 24px;
+  min-width: 320px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+  outline: none;
+}

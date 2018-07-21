@@ -1,74 +1,86 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const NODE_ENV = process.env.NODE_ENV || 'development';
+
+const DEVELOPMENT_MODE = 'development';
+const PRODUCTION_MODE = 'production';
+const NODE_ENV = process.env.NODE_ENV || DEVELOPMENT_MODE;
+
+const APP_PATH = 'src/';
+const DIST_PATH = 'public/';
+
+const plugins = [
+  new webpack.DefinePlugin({
+    NODE_ENV: JSON.stringify(NODE_ENV),
+    'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+  }),
+];
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src'),
+  context: path.resolve(__dirname, APP_PATH),
+  entry: {
+    bundle: './main',
+  },
   output: {
-    path: path.resolve(__dirname, 'extension', 'dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, DIST_PATH),
+    filename: 'js/[name].js',
+    publicPath: '/',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '~': path.resolve(__dirname, APP_PATH),
+    }
+  },
+  mode: NODE_ENV,
+  optimization: {
+    nodeEnv: NODE_ENV,
+    minimize: NODE_ENV === PRODUCTION_MODE,
+    concatenateModules: true,
   },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          query: {
-            presets: ['env', 'react'],
-            plugins: [
-              ['transform-runtime'],
-              ['transform-class-properties']
-            ]
-          }
-        }]
+        loader: 'babel-loader',
       },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           {
             loader: 'style-loader',
-            options: { singleton: true }
+            options: { singleton: true },
           },
           {
             loader: 'css-loader',
-            options: { modules: true, minimize: true, localIdentName: '[path][name]__[local]' }
-          },
-          /*{
-            loader: 'postcss-loader'
-          }*/
-        ]
-      }
-    ]
+            options: {
+              modules: true,
+              minimize: true,
+              localIdentName: NODE_ENV === PRODUCTION_MODE ? '[hash:base64]' : '[local]--[path][name]',
+            }
+          }
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|svg|gif|ttf|eot|woff|woff2)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
+      },
+    ],
   },
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin()
-  ],
+  devtool: NODE_ENV === DEVELOPMENT_MODE ? 'cheap-module-eval-source-map' : false,
+  plugins,
+  devServer: {
+    contentBase: path.join(__dirname, DIST_PATH),
+    compress: false,
+    port: 9000,
+    historyApiFallback: true,
+    disableHostCheck: true,
+    hot: true,
+  },
   node: {
     fs: 'empty'
   },
-  watch: NODE_ENV === 'development'
 };
-
-if (NODE_ENV === 'production') {
-  module.exports.plugins.push(
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify("production")
-      }
-    }),
-    new UglifyJSPlugin({
-      compress: { warnings: false },
-      mangle: true,
-      sourcemap: false,
-      beautify: false,
-      dead_code: true
-    })
-    /*new webpack.optimize.CommonsChunkPlugin({
-        name: 'common',
-        minChunks: 2
-    })*/
-  );
-}
