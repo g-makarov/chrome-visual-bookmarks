@@ -1,0 +1,52 @@
+{
+  "extends": "airbnb",
+  "globals": {
+    "NODE_ENV": true,
+    "API_URL_ENV": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "no-console": 1,
+    "no-trailing-spaces": 0,
+    "prefer-destructuring": 0,
+    "no-mixed-operators": 0,
+    "no-underscore-dangle": 0,
+    "no-case-declarations": 0,
+    "no-shadow": 0,
+    "dot-notation": 0,
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ]
+      }
+    ],
+    "import/no-unresolved": 0,
+    "import/extensions": 0,
+    "no-restricted-syntax": 0,
+    "no-unused-vars": 1,
+    "import/prefer-default-export": 0,
+    "react/jsx-filename-extension": 0,
+    "react/forbid-prop-types": 0,
+    "react/prop-types": [
+      1,
+      {
+        "skipUndeclared": true
+      }
+    ],
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/label-has-for": 0
+  },
+  "settings": {}
+}

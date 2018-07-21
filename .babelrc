@@ -1,0 +1,25 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ],
+    "react"
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    [
+      "transform-runtime",
+      {
+        "polyfill": true,
+        "regenerator": true,
+        "helpers": true
+      }
+    ],
+    "transform-class-properties",
+    "dynamic-import-node",
+    "transform-decorators"
+  ]
+}
